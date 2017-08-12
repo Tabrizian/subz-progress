@@ -24,6 +24,23 @@ server.register([
 
   server.route(
     {
+      method: 'GET',
+      path: '/movies',
+      handler: (req, reply) => {
+        reply.view('movies', {
+          title: 'Movies',
+          movies: [
+            {
+              title: 'Inception',
+              title_description: 'Inception - Folan',
+              year: '2010'
+            }
+          ]
+        });
+      }
+    })
+  server.route(
+    {
       method: 'POST',
       path: '/movie/search',
       handler: (req, reply) => {
