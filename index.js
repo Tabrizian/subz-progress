@@ -1,6 +1,7 @@
 const { Server } = require('hapi')
 
 const server = new Server()
+const axios = require('axios')
 const { view } = require('./lib')
 
 server.connection({ port: 3000 });
@@ -43,9 +44,22 @@ server.register([
     {
       method: 'POST',
       path: '/movie/search',
-      handler: (req, reply) => {
+      handler: async (req, reply) => {
         let movie = req.payload.movie;
-        reply(movie)
+        let results = {}
+        try {
+          results = await axios.get('https://subz.now.sh/imdb/search', {
+            params: {
+              query: movie
+            }
+          })
+          reply.view('movies', {
+            title: 'Movies',
+            movies: results.data.results
+          });
+        } catch (e) {
+          console.log(e)
+        }
       }
     })
   server.start((err) => {
